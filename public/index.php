@@ -108,8 +108,6 @@ include_once __DIR__ . '/../src/partials/header.php';
           </tbody>
         </table>
         <!-- Table Ends Here -->
-
-        <!-- Pagination -->
         <!-- Pagination -->
         <nav class="d-flex justify-content-center">
           <ul class="pagination">
