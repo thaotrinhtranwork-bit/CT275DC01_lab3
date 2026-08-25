@@ -2,7 +2,25 @@
 require_once __DIR__ . '/../src/bootstrap.php';
 
 include_once __DIR__ . '/../src/partials/header.php';
+
+use CT275\Labs\Contact;
+
+$contact = new Contact($PDO);
+$contacts = $contact->all();
 ?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact List</title>
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <script src="/assets/js/jquery.min.js"></script>
+  <script src="/assets/js/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/main.js"></script>
 
 <body>
   <?php include_once __DIR__ . '/../src/partials/navbar.php' ?>
@@ -34,7 +52,35 @@ include_once __DIR__ . '/../src/partials/header.php';
             </tr>
           </thead>
           <tbody>
+            <?php foreach ($contacts as $contact): ?>
+              <tr>
+                <td><?= html_escape($contact->name) ?></td>
 
+                <td><?= html_escape($contact->phone) ?></td>
+
+                <td>
+                  <?= html_escape(
+                    date("d-m-Y", strtotime($contact->created_at))
+                  ) ?>
+                </td>
+
+                <td><?= html_escape($contact->notes) ?></td>
+
+                <td class="d-flex justify-content-center">
+                  <a href="<?= 'edit.php' ?>"
+                    class="btn btn-xs btn-warning">
+                    <i alt="Edit" class="fa fa-pencil"></i>
+                    Edit
+                  </a>
+
+                  <a href="#"
+                    class="btn btn-xs btn-danger ms-1">
+                    <i alt="Delete" class="fa fa-trash"></i>
+                    Delete
+                  </a>
+                </td>
+              </tr>
+            <?php endforeach; ?>
           </tbody>
         </table>
         <!-- Table Ends Here -->
