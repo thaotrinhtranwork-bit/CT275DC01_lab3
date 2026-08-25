@@ -90,21 +90,32 @@ include_once __DIR__ . '/../src/partials/header.php';
 
                 <td><?= html_escape($contact->notes) ?></td>
 
-                 <td class="d-flex justify-content-center">
+                <td class="d-flex justify-content-center">
 
-                <a href="<?= '/edit.php?id=' . $contact->id ?>"
-                   class="btn btn-xs btn-warning">
+                  <a href="<?= '/edit.php?id=' . $contact->id ?>"
+                    class="btn btn-xs btn-warning">
                     <i alt="Edit" class="fa fa-pencil"></i>
                     Edit
-                </a>
+                  </a>
 
-                <a href="#"
-                   class="btn btn-xs btn-danger ms-1">
-                    <i alt="Delete" class="fa fa-trash"></i>
-                    Delete
-                </a>
+                  <form class="ms-1"
+                    action="/delete.php"
+                    method="POST">
 
-            </td>
+                    <input type="hidden"
+                      name="id"
+                      value="<?= $contact->id ?>">
+
+                    <button type="submit"
+                      class="btn btn-xs btn-danger"
+                      name="delete-contact">
+                      <i alt="Delete" class="fa fa-trash"></i>
+                      Delete
+                    </button>
+
+                  </form>
+
+                </td>
               </tr>
             <?php endforeach; ?>
           </tbody>
@@ -169,6 +180,51 @@ include_once __DIR__ . '/../src/partials/header.php';
 
   <?php include_once __DIR__ . '/../src/partials/footer.php' ?>
   <script>
+    const deleteButtons =
+      document.querySelectorAll('button[name="delete-contact"]');
+
+    deleteButtons.forEach(button => {
+
+      button.addEventListener('click', function(e) {
+
+        e.preventDefault();
+
+        const form = button.closest('form');
+
+        const nameTd =
+          button.closest('tr').querySelector('td:first-child');
+
+        if (nameTd) {
+          document.querySelector('.modal-body').textContent =
+            `Do you want to delete "${nameTd.textContent}"?`;
+        }
+
+        const submitForm = function() {
+          form.submit();
+        };
+
+        document.getElementById('delete').addEventListener(
+          'click',
+          submitForm, {
+            once: true
+          }
+        );
+
+        const modalEL =
+          document.getElementById('delete-confirm');
+
+        modalEL.addEventListener('hidden.bs.modal', function() {
+          document.getElementById('delete')
+            .removeEventListener('click', submitForm);
+        });
+        const confirmModal = new bootstrap.Modal(modalEL, {
+          backdrop: 'static',
+          keyboard: false
+        });
+
+        confirmModal.show();
+      });
+    });
   </script>
 </body>
 
